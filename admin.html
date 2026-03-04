@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pawdia Admin — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#2CD4B5;--teal-dk:#1FBFA3;--teal-lt:rgba(44,212,181,.1);--teal-glow:rgba(44,212,181,.25);
+  --ink:#1C0A00;--ink-70:rgba(28,10,0,.7);--ink-45:rgba(28,10,0,.45);--ink-20:rgba(28,10,0,.2);--ink-10:rgba(28,10,0,.07);
+  --cream:#FFFBF5;--cream2:#F5F0E8;--white:#fff;
+  --green:#16A34A;--green-lt:rgba(22,163,74,.1);
+  --red:#DC2626;--red-lt:rgba(220,38,38,.08);
+  --amber:#D97706;--amber-lt:rgba(217,119,6,.1);
+  --blue:#2563EB;--blue-lt:rgba(37,99,235,.1);
+  --purple:#7C3AED;--purple-lt:rgba(124,58,237,.1);
+  --serif:'Fraunces',Georgia,serif;--sans:'Plus Jakarta Sans',system-ui,sans-serif;
+  --r:10px;--rl:16px;--rxl:24px;--rp:999px;
+  --sh:0 2px 12px rgba(28,10,0,.07);--sh2:0 6px 28px rgba(28,10,0,.1);--sh3:0 16px 48px rgba(28,10,0,.13);
+  --sidebar:240px;
+}
+html,body{height:100%;font-family:var(--sans);background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+/* ═══ LOGIN SCREEN ═══ */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--cream);position:relative;overflow:hidden}
+.login-bg1{position:absolute;top:-100px;right:-100px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(44,212,181,.08),transparent 70%);pointer-events:none}
+.login-bg2{position:absolute;bottom:-80px;left:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(44,212,181,.05),transparent 70%);pointer-events:none}
+.login-card{background:var(--white);border:1.5px solid var(--ink-10);border-radius:var(--rxl);padding:44px 48px;width:100%;max-width:420px;box-shadow:var(--sh3);position:relative;z-index:1}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;justify-content:center}
+.login-logo-box{width:44px;height:44px;background:var(--teal);border-radius:14px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px var(--teal-glow)}
+.login-logo-box svg{color:white}
+.login-logo-name{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.5px}
+.login-logo-name span{color:var(--teal)}
+.login-h{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--ink);margin-bottom:6px;text-align:center;letter-spacing:-.5px}
+.login-sub{font-size:13.5px;color:var(--ink-45);text-align:center;margin-bottom:28px}
+.login-label{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-45);display:block;margin-bottom:7px}
+.login-inp{width:100%;background:var(--cream);border:1.5px solid var(--ink-10);border-radius:var(--r);padding:13px 16px;font-family:var(--sans);font-size:14px;color:var(--ink);outline:none;transition:border-color .15s;margin-bottom:16px}
+.login-inp:focus{border-color:rgba(44,212,181,.5);background:var(--white)}
+.login-btn{width:100%;background:var(--teal);color:#fff;border:none;border-radius:var(--rl);padding:14px;font-family:var(--sans);font-size:15px;font-weight:800;cursor:pointer;transition:all .15s;box-shadow:0 4px 16px var(--teal-glow);display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px}
+.login-btn:hover{background:var(--teal-dk);transform:translateY(-1px);box-shadow:0 8px 24px var(--teal-glow)}
+.login-err{background:var(--red-lt);border:1px solid rgba(220,38,38,.2);border-radius:var(--r);padding:10px 14px;font-size:13px;font-weight:600;color:var(--red);margin-bottom:14px;display:none;text-align:center}
+.login-hint{text-align:center;font-size:12px;color:var(--ink-20);margin-top:16px}
+.login-hint strong{color:var(--ink-45)}
+
+/* ═══ APP SHELL ═══ */
+.app{display:none;height:100vh;overflow:hidden}
+.app.visible{display:flex}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar);background:var(--ink);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;scrollbar-width:none}
+.sidebar::-webkit-scrollbar{display:none}
+.sb-header{padding:24px 20px 20px}
+.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.sb-logo-box{width:36px;height:36px;background:var(--teal);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo-name{font-family:var(--serif);font-size:17px;font-weight:700;color:white;letter-spacing:-.3px}
+.sb-logo-name span{color:var(--teal)}
+.sb-tag{font-size:9.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.3);padding-left:1px}
+.sb-divider{height:1px;background:rgba(255,255,255,.06);margin:0 20px 16px}
+.sb-section-label{font-size:9px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.25);padding:0 20px;margin-bottom:6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;transition:all .15s;border-radius:0;margin:1px 10px 1px;border-radius:10px;position:relative}
+.sb-item:hover{background:rgba(255,255,255,.06)}
+.sb-item.active{background:rgba(44,212,181,.12)}
+.sb-item.active::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--teal);border-radius:0 3px 3px 0;left:-10px}
+.sb-ico{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.sb-lbl{font-size:13.5px;font-weight:600;color:rgba(255,255,255,.6);flex:1}
+.sb-item.active .sb-lbl{color:var(--teal);font-weight:700}
+.sb-badge{background:var(--teal);color:#fff;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:var(--rp);min-width:20px;text-align:center}
+.sb-badge.red{background:var(--red)}
+.sb-footer{margin-top:auto;padding:16px 10px}
+.sb-user{display:flex;align-items:center;gap:10px;padding:10px;background:rgba(255,255,255,.05);border-radius:12px;margin-bottom:8px}
+.sb-avatar{width:34px;height:34px;border-radius:50%;background:var(--teal-lt);border:2px solid rgba(44,212,181,.3);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sb-uname{font-size:13px;font-weight:700;color:white}
+.sb-urole{font-size:10.5px;color:rgba(255,255,255,.35)}
+.sb-logout{width:100%;background:rgba(255,255,255,.06);color:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:9px;font-family:var(--sans);font-size:12.5px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.sb-logout:hover{background:rgba(220,38,38,.15);color:var(--red);border-color:rgba(220,38,38,.2)}
+
+/* ── MAIN CONTENT ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:60px;background:var(--white);border-bottom:1px solid var(--ink-10);display:flex;align-items:center;justify-content:space-between;padding:0 28px;flex-shrink:0}
+.topbar-left{display:flex;align-items:center;gap:8px}
+.topbar-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.topbar-breadcrumb{font-size:12px;color:var(--ink-20);display:flex;align-items:center;gap:6px}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.tb-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--rl);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;border:1.5px solid var(--ink-10);background:transparent;color:var(--ink-45)}
+.tb-btn:hover{border-color:rgba(44,212,181,.3);color:var(--teal)}
+.tb-btn.primary{background:var(--teal);border-color:var(--teal);color:#fff;box-shadow:0 3px 10px var(--teal-glow)}
+.tb-btn.primary:hover{background:var(--teal-dk);transform:translateY(-1px)}
+.content{flex:1;overflow-y:auto;padding:28px;scrollbar-width:thin;scrollbar-color:var(--ink-10) transparent}
+
+/* ── PANELS ── */
+.panel{display:none}
+.panel.active{display:block}
+
+/* ── STAT CARDS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--white);border:1.5px solid var(--ink-10);border-radius:var(--rl);padding:22px 24px;position:relative;overflow:hidden;transition:all .2s}
+.stat-card:hover{box-shadow:var(--sh2);transform:translateY(-2px)}
+.stat-card::after{content:'';position:absolute;top:0;right:0;bottom:0;width:4px;border-radius:0 var(--rl) var(--rl) 0}
+.stat-card.teal::after{background:var(--teal)}
+.stat-card.green::after{background:var(--green)}
+.stat-card.amber::after{background:var(--amber)}
+.stat-card.red::after{background:var(--red)}
+.stat-card.purple::after{background:var(--purple)}
+.stat-ico{font-size:26px;margin-bottom:10px}
+.stat-n{font-family:var(--serif);font-size:36px;font-weight:900;color:var(--ink);letter-spacing:-2px;line-height:1;margin-bottom:4px}
+.stat-l{font-size:12.5px;font-weight:600;color:var(--ink-45)}
+.stat-trend{font-size:11px;font-weight:700;margin-top:6px;display:flex;align-items:center;gap:3px}
+.stat-trend.up{color:var(--green)}
+.stat-trend.down{color:var(--red)}
+
+/* ── TABLE ── */
+.table-card{background:var(--white);border:1.5px solid var(--ink-10);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh)}
+.table-header{padding:18px 22px;border-bottom:1px solid var(--ink-10);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.table-search{display:flex;align-items:center;gap:8px;background:var(--cream);border:1.5px solid var(--ink-10);border-radius:var(--r);padding:8px 14px;flex:1;max-width:300px}
+.ts-inp{border:none;background:transparent;font-family:var(--sans);font-size:13.5px;color:var(--ink);outline:none;flex:1}
+.ts-inp::placeholder{color:var(--ink-20)}
+table{width:100%;border-collapse:collapse}
+th{padding:11px 22px;font-size:10.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-45);text-align:left;background:var(--cream);border-bottom:1px solid var(--ink-10)}
+td{padding:13px 22px;font-size:13.5px;color:var(--ink-70);border-bottom:1px solid var(--ink-10);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(44,212,181,.02)}
+.td-name{font-weight:700;color:var(--ink)}
+.td-ico{font-size:22px;line-height:1}
+.td-badge{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:var(--rp)}
+.badge-teal{background:var(--teal-lt);color:var(--teal)}
+.badge-green{background:var(--green-lt);color:var(--green)}
+.badge-amber{background:var(--amber-lt);color:var(--amber)}
+.badge-red{background:var(--red-lt);color:var(--red)}
+.badge-purple{background:var(--purple-lt);color:var(--purple)}
+.badge-gray{background:var(--ink-10);color:var(--ink-45)}
+.td-actions{display:flex;gap:6px}
+.act-btn{padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;border:1.5px solid var(--ink-10);background:transparent;color:var(--ink-45)}
+.act-btn:hover{border-color:rgba(44,212,181,.35);color:var(--teal)}
+.act-btn.del:hover{border-color:rgba(220,38,38,.3);color:var(--red)}
+.act-btn.prim{background:var(--teal);border-color:var(--teal);color:#fff}
+.act-btn.prim:hover{background:var(--teal-dk)}
+.td-score{font-family:var(--serif);font-size:17px;font-weight:900;color:var(--teal)}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(28,10,0,.5);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--white);border-radius:var(--rxl);width:100%;max-width:580px;max-height:88vh;overflow-y:auto;box-shadow:var(--sh3);transform:translateY(16px) scale(.98);transition:transform .3s cubic-bezier(.22,1,.36,1);scrollbar-width:thin}
+.modal-overlay.open .modal{transform:none}
+.modal-head{padding:24px 28px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-title{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--ink);letter-spacing:-.4px}
+.modal-close{width:32px;height:32px;border-radius:50%;background:var(--cream);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--ink-45);transition:all .15s}
+.modal-close:hover{background:var(--ink-10);color:var(--ink)}
+.modal-body{padding:0 28px 28px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-full{margin-bottom:14px}
+.form-label{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-45);display:block;margin-bottom:6px}
+.form-inp{width:100%;background:var(--cream);border:1.5px solid var(--ink-10);border-radius:var(--r);padding:11px 14px;font-family:var(--sans);font-size:13.5px;color:var(--ink);outline:none;transition:border-color .15s}
+.form-inp:focus{border-color:rgba(44,212,181,.45);background:var(--white)}
+.form-inp::placeholder{color:var(--ink-20)}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231C0A00' stroke-opacity='.4' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px}
+.form-textarea{resize:vertical;min-height:90px;font-family:var(--sans)}
+.form-tags-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.form-tag{padding:5px 11px;border-radius:var(--rp);border:1.5px solid var(--ink-10);background:var(--cream);font-size:11.5px;font-weight:700;color:var(--ink-45);cursor:pointer;transition:all .15s}
+.form-tag.on{background:var(--teal-lt);border-color:rgba(44,212,181,.3);color:var(--teal)}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;padding-top:20px;border-top:1px solid var(--ink-10);margin-top:4px}
+.modal-cancel{padding:11px 22px;border-radius:var(--rl);border:1.5px solid var(--ink-10);background:transparent;font-family:var(--sans);font-size:13.5px;font-weight:700;color:var(--ink-45);cursor:pointer;transition:all .15s}
+.modal-cancel:hover{border-color:rgba(28,10,0,.2);color:var(--ink)}
+.modal-save{padding:11px 28px;border-radius:var(--rl);background:var(--teal);border:none;font-family:var(--sans);font-size:13.5px;font-weight:800;color:#fff;cursor:pointer;transition:all .15s;box-shadow:0 3px 12px var(--teal-glow);display:flex;align-items:center;gap:7px}
+.modal-save:hover{background:var(--teal-dk);transform:translateY(-1px)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;right:28px;z-index:2000;background:var(--ink);color:#fff;font-size:13.5px;font-weight:700;padding:13px 20px;border-radius:var(--rl);box-shadow:var(--sh3);display:flex;align-items:center;gap:9px;transform:translateY(20px);opacity:0;transition:all .3s cubic-bezier(.22,1,.36,1);pointer-events:none;max-width:340px}
+.toast.show{transform:none;opacity:1}
+.toast-ico{font-size:17px}
+
+/* ── ACTIVITY FEED ── */
+.activity-list{display:flex;flex-direction:column;gap:0}
+.act-item{display:flex;align-items:center;gap:13px;padding:12px 0;border-bottom:1px solid var(--ink-10)}
+.act-item:last-child{border-bottom:none}
+.act-dot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.act-text{flex:1;font-size:13px;color:var(--ink-70);line-height:1.5}
+.act-text strong{color:var(--ink);font-weight:700}
+.act-time{font-size:11.5px;color:var(--ink-20);white-space:nowrap}
+
+/* ── SUPABASE CONFIG ── */
+.config-card{background:var(--white);border:1.5px solid var(--ink-10);border-radius:var(--rl);padding:28px;margin-bottom:20px;box-shadow:var(--sh)}
+.config-h{font-family:var(--serif);font-size:18px;font-weight:700;color:var(--ink);margin-bottom:4px;letter-spacing:-.3px}
+.config-sub{font-size:13px;color:var(--ink-45);margin-bottom:20px;line-height:1.6}
+.config-status{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:var(--rp)}
+.status-connected{background:var(--green-lt);color:var(--green)}
+.status-local{background:var(--amber-lt);color:var(--amber)}
+.step-list{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.step-item{display:flex;align-items:flex-start;gap:12px;background:var(--cream);border-radius:var(--r);padding:14px 16px;border:1px solid var(--ink-10)}
+.step-n{width:24px;height:24px;border-radius:50%;background:var(--teal);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{flex:1}
+.step-h{font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.step-p{font-size:12.5px;color:var(--ink-45);line-height:1.6}
+.code-block{background:#1C1C1E;color:#2CD4B5;font-size:12px;font-family:monospace;padding:12px 16px;border-radius:var(--r);margin-top:8px;overflow-x:auto;line-height:1.7;border:1px solid rgba(44,212,181,.1)}
+.code-block .cm{color:rgba(255,255,255,.3)}
+.code-block .ck{color:#FF9F0A}
+.code-block .cv{color:#30D158}
+
+/* ── QUICK ACTIONS ── */
+.qa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.qa-card{background:var(--white);border:1.5px solid var(--ink-10);border-radius:var(--rl);padding:20px;cursor:pointer;transition:all .2s;text-align:center}
+.qa-card:hover{border-color:rgba(44,212,181,.3);transform:translateY(-3px);box-shadow:var(--sh2)}
+.qa-ico{font-size:28px;margin-bottom:10px}
+.qa-label{font-family:var(--serif);font-size:14.5px;font-weight:700;color:var(--ink);margin-bottom:4px;letter-spacing:-.2px}
+.qa-sub{font-size:12px;color:var(--ink-45)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  :root{--sidebar:200px}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .qa-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:680px){
+  :root{--sidebar:0px}
+  .sidebar{display:none}
+  .stats-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-bg1"></div>
+  <div class="login-bg2"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-box">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <ellipse cx="7" cy="4.5" rx="2.2" ry="2.8" fill="white" opacity=".92"/>
+          <ellipse cx="17" cy="4.5" rx="2.2" ry="2.8" fill="white" opacity=".92"/>
+          <ellipse cx="3.2" cy="9.5" rx="1.8" ry="2.3" fill="white" opacity=".92"/>
+          <ellipse cx="20.8" cy="9.5" rx="1.8" ry="2.3" fill="white" opacity=".92"/>
+          <path d="M12 8.5C8.5 8.5 6 11 6 14C6 17 8.5 19.5 12 19.5C15.5 19.5 18 17 18 14C18 11 15.5 8.5 12 8.5Z" fill="white"/>
+        </svg>
+      </div>
+      <div class="login-logo-name">Oscar & Mojo's <span>Pawdia</span></div>
+    </div>
+    <div class="login-h">Admin Panel</div>
+    <div class="login-sub">Sign in to manage your website content</div>
+    <div class="login-err" id="loginErr">Wrong password. Try again.</div>
+    <label class="login-label">Password</label>
+    <input class="login-inp" type="password" id="loginPwd" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="login-btn" onclick="doLogin()">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1v8M4 5l4-4 4 4" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 10v3a1 1 0 001 1h10a1 1 0 001-1v-3" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Sign in to Pawdia Admin
+    </button>
+    <div class="login-hint">Default password: <strong>oscar2025</strong> — change this before going live</div>
+  </div>
+</div>
+
+<!-- ═══ APP SHELL ═══ -->
+<div class="app" id="appShell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-header">
+      <div class="sb-logo">
+        <div class="sb-logo-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><ellipse cx="7" cy="4.5" rx="2.2" ry="2.8" fill="white" opacity=".9"/><ellipse cx="17" cy="4.5" rx="2.2" ry="2.8" fill="white" opacity=".9"/><ellipse cx="3.2" cy="9.5" rx="1.8" ry="2.3" fill="white" opacity=".9"/><ellipse cx="20.8" cy="9.5" rx="1.8" ry="2.3" fill="white" opacity=".9"/><path d="M12 8.5C8.5 8.5 6 11 6 14C6 17 8.5 19.5 12 19.5C15.5 19.5 18 17 18 14C18 11 15.5 8.5 12 8.5Z" fill="white"/></svg>
+        </div>
+        <div class="sb-logo-name">Oscar & Mojo's <span>Pawdia</span></div>
+      </div>
+      <div class="sb-tag">Admin Panel</div>
+    </div>
+    <div class="sb-divider"></div>
+
+    <div class="sb-section-label">Main</div>
+    <div class="sb-item active" onclick="showPanel('dashboard',this)"><span class="sb-ico">📊</span><span class="sb-lbl">Dashboard</span></div>
+
+    <div class="sb-section-label" style="margin-top:10px">Content</div>
+    <div class="sb-item" onclick="showPanel('products',this)"><span class="sb-ico">🛍</span><span class="sb-lbl">Products</span><span class="sb-badge" id="badge-products">12</span></div>
+    <div class="sb-item" onclick="showPanel('places',this)"><span class="sb-ico">📍</span><span class="sb-lbl">Places</span><span class="sb-badge" id="badge-places">12</span></div>
+    <div class="sb-item" onclick="showPanel('blog',this)"><span class="sb-ico">📝</span><span class="sb-lbl">Blog Posts</span><span class="sb-badge" id="badge-blog">4</span></div>
+    <div class="sb-item" onclick="showPanel('food',this)"><span class="sb-ico">🥦</span><span class="sb-lbl">Healthy Food</span><span class="sb-badge" id="badge-food">7</span></div>
+    <div class="sb-item" onclick="showPanel('lost',this)"><span class="sb-ico">🚨</span><span class="sb-lbl">Lost Dogs</span><span class="sb-badge red" id="badge-lost">3</span></div>
+    <div class="sb-item" onclick="showPanel('brands',this)"><span class="sb-ico">🤝</span><span class="sb-lbl">Brand Partners</span><span class="sb-badge" id="badge-brands">2</span></div>
+
+    <div class="sb-section-label" style="margin-top:10px">Settings</div>
+    <div class="sb-item" onclick="showPanel('settings',this)"><span class="sb-ico">⚙️</span><span class="sb-lbl">Settings</span></div>
+    <div class="sb-item" onclick="showPanel('setup',this)"><span class="sb-ico">🔌</span><span class="sb-lbl">Supabase Setup</span></div>
+
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar">🐾</div>
+        <div><div class="sb-uname">Oscar & Mojo</div><div class="sb-urole">Admin</div></div>
+      </div>
+      <button class="sb-logout" onclick="doLogout()">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M5 1.5H2a1 1 0 00-1 1v8a1 1 0 001 1h3M9 9.5l3-3-3-3M12 6.5H5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Sign out
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      </div>
+      <div class="topbar-right">
+        <button class="tb-btn" onclick="window.open('pawdia-final.html','_blank')">👁 View site</button>
+        <button class="tb-btn primary" id="topbarAddBtn" onclick="openAddModal()">+ Add new</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ════ DASHBOARD ════ -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card teal"><div class="stat-ico">🛍</div><div class="stat-n" id="stat-products">12</div><div class="stat-l">Products listed</div><div class="stat-trend up">↑ 2 this week</div></div>
+          <div class="stat-card green"><div class="stat-ico">📍</div><div class="stat-n" id="stat-places">12</div><div class="stat-l">Places indexed</div><div class="stat-trend up">↑ 3 this week</div></div>
+          <div class="stat-card amber"><div class="stat-ico">📝</div><div class="stat-n" id="stat-blog">4</div><div class="stat-l">Blog posts</div><div class="stat-trend up">↑ 1 this week</div></div>
+          <div class="stat-card red"><div class="stat-ico">🚨</div><div class="stat-n" id="stat-lost">3</div><div class="stat-l">Active lost alerts</div><div class="stat-trend down">↑ 1 today</div></div>
+        </div>
+
+        <!-- Quick actions -->
+        <div style="font-family:var(--serif);font-size:17px;font-weight:700;color:var(--ink);margin-bottom:14px;letter-spacing:-.3px">Quick actions</div>
+        <div class="qa-grid">
+          <div class="qa-card" onclick="showPanel('products',document.querySelector('[onclick*=products]'))"><div class="qa-ico">📦</div><div class="qa-label">Add Product</div><div class="qa-sub">List a new product in the marketplace</div></div>
+          <div class="qa-card" onclick="showPanel('places',document.querySelector('[onclick*=places]'))"><div class="qa-ico">📍</div><div class="qa-label">Add Place</div><div class="qa-sub">Add a pet-friendly cafe, park or vet</div></div>
+          <div class="qa-card" onclick="showPanel('blog',document.querySelector('[onclick*=blog]'))"><div class="qa-ico">✍️</div><div class="qa-label">Write Blog Post</div><div class="qa-sub">Publish a new story or guide</div></div>
+          <div class="qa-card" onclick="showPanel('food',document.querySelector('[onclick*=food]'))"><div class="qa-ico">🥦</div><div class="qa-label">Add Food Item</div><div class="qa-sub">Update the healthy food guide</div></div>
+          <div class="qa-card" onclick="showPanel('lost',document.querySelector('[onclick*=lost]'))"><div class="qa-ico">🚨</div><div class="qa-label">Lost Dog Alerts</div><div class="qa-sub">Review and manage active reports</div></div>
+          <div class="qa-card" onclick="showPanel('brands',document.querySelector('[onclick*=brands]'))"><div class="qa-ico">🤝</div><div class="qa-label">Brand Partners</div><div class="qa-sub">Manage collab enquiries</div></div>
+        </div>
+
+        <!-- Activity feed -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="table-card">
+            <div class="table-header"><span style="font-family:var(--serif);font-size:15px;font-weight:700">Recent activity</span></div>
+            <div style="padding:8px 20px 16px">
+              <div class="activity-list" id="activityFeed"></div>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-header"><span style="font-family:var(--serif);font-size:15px;font-weight:700">🚨 Urgent — Lost dogs</span></div>
+            <div style="padding:0">
+              <table><thead><tr><th>Dog</th><th>Location</th><th>Since</th></tr></thead>
+              <tbody id="dashLostTable"></tbody></table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ PRODUCTS ════ -->
+      <div class="panel" id="panel-products">
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-search"><span>🔍</span><input class="ts-inp" placeholder="Search products…" oninput="filterTable('productsTable',this.value)"/></div>
+            <button class="tb-btn primary" onclick="openModal('product')">+ Add product</button>
+          </div>
+          <table><thead><tr><th>Icon</th><th>Name</th><th>Brand</th><th>Category</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="productsTable"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ════ PLACES ════ -->
+      <div class="panel" id="panel-places">
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-search"><span>🔍</span><input class="ts-inp" placeholder="Search places…" oninput="filterTable('placesTable',this.value)"/></div>
+            <button class="tb-btn primary" onclick="openModal('place')">+ Add place</button>
+          </div>
+          <table><thead><tr><th>Type</th><th>Name</th><th>Area</th><th>Score</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="placesTable"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ════ BLOG ════ -->
+      <div class="panel" id="panel-blog">
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-search"><span>🔍</span><input class="ts-inp" placeholder="Search posts…" oninput="filterTable('blogTable',this.value)"/></div>
+            <button class="tb-btn primary" onclick="openModal('blog')">+ Write post</button>
+          </div>
+          <table><thead><tr><th>Title</th><th>Category</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+          <tbody id="blogTable"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ════ HEALTHY FOOD ════ -->
+      <div class="panel" id="panel-food">
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-search"><span>🔍</span><input class="ts-inp" placeholder="Search food items…" oninput="filterTable('foodTable',this.value)"/></div>
+            <button class="tb-btn primary" onclick="openModal('food')">+ Add food item</button>
+          </div>
+          <table><thead><tr><th>Icon</th><th>Name</th><th>Category</th><th>Safe?</th><th>Tags</th><th>Actions</th></tr></thead>
+          <tbody id="foodTable"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ════ LOST DOGS ════ -->
+      <div class="panel" id="panel-lost">
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-search"><span>🔍</span><input class="ts-inp" placeholder="Search reports…" oninput="filterTable('lostTable',this.value)"/></div>
+            <button class="tb-btn primary" onclick="openModal('lost')">+ Add report</button>
+          </div>
+          <table><thead><tr><th>Dog</th><th>Breed</th><th>Last Seen</th><th>Owner</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="lostTable"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ════ BRAND PARTNERS ════ -->
+      <div class="panel" id="panel-brands">
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-search"><span>🔍</span><input class="ts-inp" placeholder="Search brands…" oninput="filterTable('brandsTable',this.value)"/></div>
+            <button class="tb-btn primary" onclick="openModal('brand')">+ Add partner</button>
+          </div>
+          <table><thead><tr><th>Brand</th><th>Contact</th><th>Tier</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="brandsTable"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ════ SETTINGS ════ -->
+      <div class="panel" id="panel-settings">
+        <div class="config-card">
+          <div class="config-h">Site Settings</div>
+          <div class="config-sub">Update your site name, description, contact and social links.</div>
+          <div class="form-grid">
+            <div><label class="form-label">Site name</label><input class="form-inp" value="Oscar & Mojo's Pawdia"/></div>
+            <div><label class="form-label">Tagline</label><input class="form-inp" value="Find every pet-friendly place near you"/></div>
+          </div>
+          <div class="form-grid">
+            <div><label class="form-label">Instagram handle</label><input class="form-inp" value="@oscar_and_mojo"/></div>
+            <div><label class="form-label">Contact email</label><input class="form-inp" value="hello@pawdia.in"/></div>
+          </div>
+          <div class="form-full"><label class="form-label">Change admin password</label><input class="form-inp" type="password" placeholder="New password…"/></div>
+          <button class="tb-btn primary" onclick="showToast('✅','Settings saved!')">Save settings</button>
+        </div>
+        <div class="config-card">
+          <div class="config-h">API Keys</div>
+          <div class="config-sub">These keys power the AI search on your website. Keep them secret.</div>
+          <div class="form-full"><label class="form-label">Anthropic API Key (for AI search)</label><input class="form-inp" type="password" placeholder="sk-ant-…" value="sk-ant-●●●●●●●●●●●●●●●●"/></div>
+          <div class="form-full"><label class="form-label">Supabase URL</label><input class="form-inp" placeholder="https://xxxx.supabase.co"/></div>
+          <div class="form-full"><label class="form-label">Supabase Anon Key</label><input class="form-inp" type="password" placeholder="eyJ…"/></div>
+          <button class="tb-btn primary" onclick="showToast('🔑','API keys saved securely!')">Save keys</button>
+        </div>
+      </div>
+
+      <!-- ════ SUPABASE SETUP ════ -->
+      <div class="panel" id="panel-setup">
+        <div class="config-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <div class="config-h">Database Setup (Supabase)</div>
+            <span class="config-status status-local">⚡ Running locally</span>
+          </div>
+          <div class="config-sub">Right now your data is saved in the browser (localStorage). To make it permanent and accessible from anywhere, connect Supabase — it takes about 5 minutes and is completely free.</div>
+          <div class="step-list">
+            <div class="step-item"><div class="step-n">1</div><div class="step-body"><div class="step-h">Create a free Supabase account</div><div class="step-p">Go to <strong>supabase.com</strong> → New project → Name it "pawdia" → Choose a strong DB password</div></div></div>
+            <div class="step-item"><div class="step-n">2</div><div class="step-body"><div class="step-h">Create your tables</div><div class="step-p">In Supabase → SQL Editor → paste this and run:</div>
+              <div class="code-block"><span class="cm">-- Products table</span>
+<span class="ck">create table</span> products (
+  id <span class="cv">bigserial primary key</span>,
+  name <span class="cv">text</span>, brand <span class="cv">text</span>, category <span class="cv">text</span>,
+  price <span class="cv">int</span>, mrp <span class="cv">int</span>, ico <span class="cv">text</span>,
+  description <span class="cv">text</span>, approved <span class="cv">boolean default true</span>,
+  created_at <span class="cv">timestamptz default now()</span>
+);
+<span class="cm">-- Places table</span>
+<span class="ck">create table</span> places (
+  id <span class="cv">bigserial primary key</span>,
+  name <span class="cv">text</span>, type <span class="cv">text</span>, address <span class="cv">text</span>,
+  score <span class="cv">numeric</span>, open <span class="cv">boolean</span>,
+  summary <span class="cv">text</span>, tags <span class="cv">text[]</span>,
+  created_at <span class="cv">timestamptz default now()</span>
+);
+<span class="cm">-- Blog posts</span>
+<span class="ck">create table</span> blog_posts (
+  id <span class="cv">bigserial primary key</span>,
+  title <span class="cv">text</span>, category <span class="cv">text</span>,
+  content <span class="cv">text</span>, status <span class="cv">text default 'draft'</span>,
+  created_at <span class="cv">timestamptz default now()</span>
+);
+<span class="cm">-- Lost dogs</span>
+<span class="ck">create table</span> lost_dogs (
+  id <span class="cv">bigserial primary key</span>,
+  dog_name <span class="cv">text</span>, breed <span class="cv">text</span>,
+  last_seen <span class="cv">text</span>, owner_phone <span class="cv">text</span>,
+  status <span class="cv">text default 'missing'</span>,
+  created_at <span class="cv">timestamptz default now()</span>
+);</div>
+            </div></div>
+            <div class="step-item"><div class="step-n">3</div><div class="step-body"><div class="step-h">Copy your keys into Settings</div><div class="step-p">Supabase dashboard → Settings → API → copy <strong>Project URL</strong> and <strong>anon public</strong> key → paste in the Settings panel above</div></div></div>
+            <div class="step-item"><div class="step-n">4</div><div class="step-body"><div class="step-h">That's it — data now saves permanently</div><div class="step-p">Any product, place or blog post you add here will instantly appear on <strong>pawdia.in</strong> and the app. No code needed ever again.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ═══ MODALS ═══ -->
+<!-- Product Modal -->
+<div class="modal-overlay" id="modal-product">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title" id="product-modal-title">Add Product</div><button class="modal-close" onclick="closeModal('product')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div><label class="form-label">Product name *</label><input class="form-inp" id="pm-name" placeholder="e.g. Salmon & Sweet Potato Bites"/></div>
+        <div><label class="form-label">Brand *</label><input class="form-inp" id="pm-brand" placeholder="e.g. Dogaholic"/></div>
+      </div>
+      <div class="form-grid">
+        <div><label class="form-label">Category *</label><select class="form-inp form-select" id="pm-cat"><option value="">Select…</option><option>food</option><option>accessories</option><option>grooming</option><option>health</option><option>training</option><option>apparel</option></select></div>
+        <div><label class="form-label">Icon / Emoji</label><input class="form-inp" id="pm-ico" placeholder="🐟" maxlength="4"/></div>
+      </div>
+      <div class="form-grid">
+        <div><label class="form-label">Sale price (₹) *</label><input class="form-inp" id="pm-price" type="number" placeholder="449"/></div>
+        <div><label class="form-label">MRP (₹)</label><input class="form-inp" id="pm-mrp" type="number" placeholder="599"/></div>
+      </div>
+      <div class="form-full"><label class="form-label">Description *</label><textarea class="form-inp form-textarea" id="pm-desc" placeholder="What is this product? Why will dog owners love it?"></textarea></div>
+      <div class="form-full"><label class="form-label">Key features (comma separated)</label><input class="form-inp" id="pm-perks" placeholder="Grain free, Single protein, No additives"/></div>
+      <div class="form-full"><label class="form-label">Product link / URL</label><input class="form-inp" id="pm-link" placeholder="https://brand.com/product"/></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
+        <input type="checkbox" id="pm-approved" checked style="width:16px;height:16px;accent-color:var(--teal)"/>
+        <label for="pm-approved" style="font-size:13.5px;font-weight:600;color:var(--ink-70);cursor:pointer">Oscar &amp; Mojo Approved badge</label>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-cancel" onclick="closeModal('product')">Cancel</button>
+        <button class="modal-save" onclick="saveItem('product')">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Save product
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Place Modal -->
+<div class="modal-overlay" id="modal-place">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title" id="place-modal-title">Add Place</div><button class="modal-close" onclick="closeModal('place')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div><label class="form-label">Place name *</label><input class="form-inp" id="plm-name" placeholder="e.g. Matteo Coffee"/></div>
+        <div><label class="form-label">Type *</label><select class="form-inp form-select" id="plm-type"><option value="">Select…</option><option>cafe</option><option>restaurant</option><option>bar</option><option>hotel</option><option>park</option><option>vet</option><option>groomer</option><option>boarding</option><option>petstore</option></select></div>
+      </div>
+      <div class="form-full"><label class="form-label">Full address *</label><input class="form-inp" id="plm-address" placeholder="Street, area, city"/></div>
+      <div class="form-grid">
+        <div><label class="form-label">Pawdia Score (0–10) *</label><input class="form-inp" id="plm-score" type="number" min="0" max="10" step="0.1" placeholder="8.4"/></div>
+        <div><label class="form-label">Currently open?</label><select class="form-inp form-select" id="plm-open"><option value="true">Yes — Open</option><option value="false">No — Closed</option></select></div>
+      </div>
+      <div class="form-full"><label class="form-label">Pet policy / summary *</label><textarea class="form-inp form-textarea" id="plm-summary" placeholder="Describe the pet experience here — outdoor seating, water bowls, staff attitude…"></textarea></div>
+      <div class="form-full">
+        <label class="form-label">Tags</label>
+        <div class="form-tags-row" id="plm-tags-row">
+          <div class="form-tag on" data-tag="outdoor">outdoor</div>
+          <div class="form-tag" data-tag="dogs">dogs</div>
+          <div class="form-tag" data-tag="cats">cats</div>
+          <div class="form-tag" data-tag="water">water bowls</div>
+          <div class="form-tag" data-tag="indoor">indoor</div>
+          <div class="form-tag" data-tag="verified">verified</div>
+          <div class="form-tag" data-tag="offleash">off-leash</div>
+          <div class="form-tag" data-tag="24hr">24hr</div>
+          <div class="form-tag" data-tag="emergency">emergency</div>
+          <div class="form-tag" data-tag="menu">pet menu</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-cancel" onclick="closeModal('place')">Cancel</button>
+        <button class="modal-save" onclick="saveItem('place')">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Save place
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Blog Modal -->
+<div class="modal-overlay" id="modal-blog">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">Write Blog Post</div><button class="modal-close" onclick="closeModal('blog')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-full"><label class="form-label">Title *</label><input class="form-inp" id="bm-title" placeholder="e.g. 10 best dog-friendly cafes in Bengaluru"/></div>
+      <div class="form-grid">
+        <div><label class="form-label">Category *</label><select class="form-inp form-select" id="bm-cat"><option>Places Guide</option><option>Nutrition</option><option>Health</option><option>Training</option><option>Oscar & Mojo Story</option><option>Product Review</option></select></div>
+        <div><label class="form-label">Status</label><select class="form-inp form-select" id="bm-status"><option value="published">Published</option><option value="draft">Draft</option></select></div>
+      </div>
+      <div class="form-full"><label class="form-label">Content *</label><textarea class="form-inp form-textarea" id="bm-content" style="min-height:160px" placeholder="Write your blog post content here…"></textarea></div>
+      <div class="form-full"><label class="form-label">Read time (e.g. 5 min read)</label><input class="form-inp" id="bm-readtime" placeholder="5 min read"/></div>
+      <div class="modal-footer">
+        <button class="modal-cancel" onclick="closeModal('blog')">Cancel</button>
+        <button class="modal-save" onclick="saveItem('blog')">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Publish post
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Food Modal -->
+<div class="modal-overlay" id="modal-food">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">Add Food Item</div><button class="modal-close" onclick="closeModal('food')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div><label class="form-label">Food name *</label><input class="form-inp" id="fm-name" placeholder="e.g. Boiled Chicken Breast"/></div>
+        <div><label class="form-label">Icon / Emoji</label><input class="form-inp" id="fm-ico" placeholder="🍗" maxlength="4"/></div>
+      </div>
+      <div class="form-grid">
+        <div><label class="form-label">Category</label><select class="form-inp form-select" id="fm-cat"><option>Protein</option><option>Vegetables</option><option>Fruits</option><option>Grains</option><option>Supplements</option><option>Toxic / Avoid</option></select></div>
+        <div><label class="form-label">Safe for dogs?</label><select class="form-inp form-select" id="fm-safe"><option value="yes">✅ Yes — Safe</option><option value="no">⛔ No — Toxic</option><option value="moderate">⚠️ In moderation</option></select></div>
+      </div>
+      <div class="form-full"><label class="form-label">Description / why it's good or bad *</label><textarea class="form-inp form-textarea" id="fm-desc" placeholder="Nutritional benefits or dangers…"></textarea></div>
+      <div class="form-full"><label class="form-label">Tags (comma separated)</label><input class="form-inp" id="fm-tags" placeholder="High protein, Easily digestible, Low fat"/></div>
+      <div class="modal-footer">
+        <button class="modal-cancel" onclick="closeModal('food')">Cancel</button>
+        <button class="modal-save" onclick="saveItem('food')">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Save food item
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lost Dog Modal -->
+<div class="modal-overlay" id="modal-lost">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">Add Lost Dog Report</div><button class="modal-close" onclick="closeModal('lost')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div><label class="form-label">Dog name *</label><input class="form-inp" id="lm-name" placeholder="e.g. Bruno"/></div>
+        <div><label class="form-label">Breed</label><input class="form-inp" id="lm-breed" placeholder="e.g. Golden Retriever"/></div>
+      </div>
+      <div class="form-full"><label class="form-label">Last seen location *</label><input class="form-inp" id="lm-location" placeholder="e.g. Indiranagar 12th Main, Bengaluru"/></div>
+      <div class="form-grid">
+        <div><label class="form-label">Owner name</label><input class="form-inp" id="lm-owner" placeholder="Owner full name"/></div>
+        <div><label class="form-label">Owner phone *</label><input class="form-inp" id="lm-phone" placeholder="+91 98XXX XXXXX"/></div>
+      </div>
+      <div class="form-grid">
+        <div><label class="form-label">Date missing</label><input class="form-inp" id="lm-date" type="date"/></div>
+        <div><label class="form-label">Status</label><select class="form-inp form-select" id="lm-status"><option value="missing">🔴 Missing</option><option value="found">✅ Found/Reunited</option></select></div>
+      </div>
+      <div class="form-full"><label class="form-label">Description / identifying marks</label><textarea class="form-inp form-textarea" id="lm-desc" placeholder="Collar colour, size, any distinctive marks…"></textarea></div>
+      <div class="modal-footer">
+        <button class="modal-cancel" onclick="closeModal('lost')">Cancel</button>
+        <button class="modal-save" onclick="saveItem('lost')" style="background:var(--red);box-shadow:0 3px 12px rgba(220,38,38,.3)">
+          🚨 Send alert
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Brand Partner Modal -->
+<div class="modal-overlay" id="modal-brand">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">Brand Partner</div><button class="modal-close" onclick="closeModal('brand')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div><label class="form-label">Brand name *</label><input class="form-inp" id="brm-name" placeholder="e.g. Dogaholic"/></div>
+        <div><label class="form-label">Contact person</label><input class="form-inp" id="brm-contact" placeholder="Name"/></div>
+      </div>
+      <div class="form-grid">
+        <div><label class="form-label">Email</label><input class="form-inp" id="brm-email" type="email" placeholder="brand@company.com"/></div>
+        <div><label class="form-label">Phone</label><input class="form-inp" id="brm-phone" placeholder="+91…"/></div>
+      </div>
+      <div class="form-grid">
+        <div><label class="form-label">Tier</label><select class="form-inp form-select" id="brm-tier"><option>Starter — ₹5K/mo</option><option>Growth — ₹15K/mo</option><option>Signature — ₹35K/mo</option><option>Custom</option></select></div>
+        <div><label class="form-label">Status</label><select class="form-inp form-select" id="brm-status"><option value="active">Active</option><option value="pending">Pending review</option><option value="paused">Paused</option></select></div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-cancel" onclick="closeModal('brand')">Cancel</button>
+        <button class="modal-save" onclick="saveItem('brand')">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3.5 3.5L12 3" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Save partner
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toastEl"><span class="toast-ico" id="toastIco">✅</span><span id="toastMsg"></span></div>
+
+<script>
+const ADMIN_PASSWORD = 'oscar2025';
+const STORAGE_KEY = 'pawdia_admin_data';
+
+// ── Default seed data ──
+const DEFAULT_DATA = {
+  products:[
+    {id:1,ico:'🐟',name:'Salmon & Sweet Potato Bites',brand:'Dogaholic',category:'food',price:449,mrp:599,desc:'Cold-pressed single protein treats.',approved:true,link:'https://dogaholic.in'},
+    {id:2,ico:'🎀',name:'Adjustable Mesh Harness',brand:'PetKraft',category:'accessories',price:899,mrp:1299,desc:'Breathable mesh harness, no-pull front clip.',approved:true,link:'https://petkraft.in'},
+    {id:3,ico:'🛁',name:'De-shedding Shampoo',brand:'Wahl Pet India',category:'grooming',price:649,mrp:799,desc:'Reduces shedding by 80%. Oatmeal & aloe.',approved:true,link:'https://wahlpet.in'},
+    {id:4,ico:'💊',name:'Joint Care Tablets',brand:'Himalaya Pet',category:'health',price:520,mrp:680,desc:'Glucosamine complex. Chicken flavoured.',approved:true,link:'https://himalayawellness.in'},
+    {id:5,ico:'🍗',name:'Freeze-Dried Chicken Toppers',brand:'Drools',category:'food',price:380,mrp:450,desc:'100% raw chicken, freeze dried.',approved:true,link:'https://drools.in'},
+    {id:6,ico:'🛏',name:'Orthopedic Dog Bed',brand:'HUFT',category:'accessories',price:2799,mrp:3499,desc:'Memory foam, waterproof, 4 sizes.',approved:true,link:'https://headsupfortails.com'},
+  ],
+  places:[
+    {id:1,type:'cafe',name:'Lazy Dog Cafe',address:'12th Main Rd, Indiranagar',score:9.8,open:true,tags:['dogs','outdoor','water','verified'],summary:'Gold standard for dog-friendly cafes in Bengaluru.'},
+    {id:2,type:'restaurant',name:'The Fatty Bao',address:'Koramangala 5B',score:7.4,open:true,tags:['outdoor','dogs'],summary:'Popular Asian gastropub with pet-welcoming outdoor section.'},
+    {id:3,type:'vet',name:'PetCure Veterinary Clinic',address:'100 Feet Rd, Indiranagar',score:9.5,open:true,tags:['24hr','surgery','emergency'],summary:'Multi-specialty clinic, 24/7 emergency care.'},
+    {id:4,type:'park',name:'Ulsoor Lake Dog Run',address:'Near Ulsoor Lake, Halasuru',score:9.2,open:true,tags:['offleash','outdoor','water'],summary:'Fenced off-leash area beside the lake.'},
+    {id:5,type:'hotel',name:'The Leela Palace',address:'Airport Rd, Kodihalli',score:8.8,open:true,tags:['indoor','dogs','verified'],summary:'5-star hotel with official pet-friendly policy.'},
+    {id:6,type:'groomer',name:'Woofy Pet Spa',address:'CMH Rd, Indiranagar',score:8.8,open:true,tags:['grooming','dogs','cats'],summary:'Full-service salon, all breeds and sizes.'},
+  ],
+  blog:[
+    {id:1,title:'10 best dog-friendly cafes in Indiranagar right now',category:'Places Guide',status:'published',readtime:'5 min read',content:'Full guide to the best spots…',date:'2025-03-02'},
+    {id:2,title:'What your Golden Retriever should eat at every life stage',category:'Nutrition',status:'published',readtime:'7 min read',content:'Complete nutrition guide…',date:'2025-02-28'},
+    {id:3,title:'Best vets in Bengaluru for large breeds',category:'Health',status:'published',readtime:'4 min read',content:'Vet guide for large breeds…',date:'2025-02-25'},
+    {id:4,title:'Dog-friendly weekend getaways from Bengaluru',category:'Places Guide',status:'draft',readtime:'6 min read',content:'Weekend trip ideas…',date:'2025-02-20'},
+  ],
+  food:[
+    {id:1,ico:'🍗',name:'Boiled Chicken Breast',category:'Protein',safe:'yes',tags:'High protein, Digestible, Low fat',desc:'Lean protein, great for all dogs.'},
+    {id:2,ico:'🐟',name:'Rohu Fish (Cooked)',category:'Protein',safe:'yes',tags:'Omega-3, Coat health, Brain health',desc:'Excellent omega-3 source for Indian dogs.'},
+    {id:3,ico:'🥕',name:'Carrots (Raw/Steamed)',category:'Vegetables',safe:'yes',tags:'Beta-carotene, Dental care, Low calorie',desc:'Great dental chew, rich in vitamins.'},
+    {id:4,ico:'🍫',name:'Chocolate',category:'Toxic / Avoid',safe:'no',tags:'Toxic, Fatal, Theobromine',desc:'Theobromine is extremely toxic to dogs.'},
+    {id:5,ico:'🧅',name:'Onions & Garlic',category:'Toxic / Avoid',safe:'no',tags:'Toxic, Anaemia, All forms',desc:'Causes haemolytic anaemia, all forms toxic.'},
+    {id:6,ico:'🥚',name:'Eggs (Cooked)',category:'Protein',safe:'yes',tags:'Complete protein, Biotin, Easy to digest',desc:'Excellent protein source, cooked only.'},
+    {id:7,ico:'🫐',name:'Blueberries',category:'Fruits',safe:'yes',tags:'Antioxidants, Low calorie, Superfood',desc:'Antioxidant-rich superfood, great as treats.'},
+  ],
+  lost:[
+    {id:1,name:'Bruno',breed:'Golden Retriever',location:'Indiranagar 12th Main',owner:'Priya Mehta',phone:'+91 98441 23456',status:'missing',date:'2025-03-04',desc:'Orange collar, 32kg, responds to Bruno'},
+    {id:2,name:'Latte',breed:'Beagle',location:'Koramangala 5B',owner:'Karan Shah',phone:'+91 98440 87654',status:'missing',date:'2025-03-03',desc:'Blue tag, 9kg, spayed female'},
+    {id:3,name:'Shadow',breed:'Labrador',location:'HSR Layout Sector 2',owner:'Neha Roy',phone:'+91 98442 11223',status:'missing',date:'2025-03-02',desc:'Black coat, no collar, 28kg male'},
+  ],
+  brands:[
+    {id:1,name:'Dogaholic',contact:'Rahul Sharma',email:'rahul@dogaholic.in',phone:'+91 98440 55667',tier:'Growth — ₹15K/mo',status:'active'},
+    {id:2,name:'PetKraft',contact:'Sneha Patel',email:'sneha@petkraft.in',phone:'+91 98441 33445',tier:'Starter — ₹5K/mo',status:'pending'},
+  ]
+};
+
+// ── State ──
+let db = JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(DEFAULT_DATA));
+let currentPanel = 'dashboard';
+let editingId = null;
+let editingType = null;
+
+function saveDB(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); }
+
+// ── LOGIN ──
+function doLogin(){
+  const pwd = document.getElementById('loginPwd').value;
+  if(pwd === ADMIN_PASSWORD){
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('appShell').classList.add('visible');
+    renderAll();
+  } else {
+    const err = document.getElementById('loginErr');
+    err.style.display = 'block';
+    document.getElementById('loginPwd').value = '';
+    document.getElementById('loginPwd').focus();
+    setTimeout(()=>err.style.display='none', 3000);
+  }
+}
+function doLogout(){
+  document.getElementById('appShell').classList.remove('visible');
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('loginPwd').value = '';
+}
+document.getElementById('loginPwd').addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+
+// ── PANEL SWITCHING ──
+function showPanel(name, el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(s=>s.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  if(el) el.classList.add('active');
+  currentPanel = name;
+  const titles = {dashboard:'Dashboard',products:'Products',places:'Places',blog:'Blog Posts',food:'Healthy Food',lost:'Lost Dogs',brands:'Brand Partners',settings:'Settings',setup:'Supabase Setup'};
+  document.getElementById('topbarTitle').textContent = titles[name] || name;
+  document.getElementById('topbarAddBtn').style.display = ['settings','setup','dashboard'].includes(name) ? 'none' : 'flex';
+  if(name !== 'dashboard') renderTable(name);
+}
+function openAddModal(){ openModal(currentPanel.replace('brands','brand').replace('blog','blog').replace('products','product').replace('places','place').replace('food','food').replace('lost','lost')); }
+
+// ── RENDER TABLES ──
+function renderAll(){
+  renderDashboard();
+  updateBadges();
+}
+
+function updateBadges(){
+  document.getElementById('badge-products').textContent = db.products.length;
+  document.getElementById('badge-places').textContent = db.places.length;
+  document.getElementById('badge-blog').textContent = db.blog.length;
+  document.getElementById('badge-food').textContent = db.food.length;
+  document.getElementById('badge-lost').textContent = db.lost.filter(d=>d.status==='missing').length;
+  document.getElementById('badge-brands').textContent = db.brands.length;
+  document.getElementById('stat-products').textContent = db.products.length;
+  document.getElementById('stat-places').textContent = db.places.length;
+  document.getElementById('stat-blog').textContent = db.blog.length;
+  document.getElementById('stat-lost').textContent = db.lost.filter(d=>d.status==='missing').length;
+}
+
+function renderDashboard(){
+  updateBadges();
+  // Activity feed
+  const feed = document.getElementById('activityFeed');
+  const activities = [
+    {ico:'📦',bg:'#E6FBF8',text:'<strong>Salmon Bites</strong> product added to marketplace',time:'2 hrs ago'},
+    {ico:'📍',bg:'var(--teal-lt)',text:'<strong>Toit Brewpub</strong> place score updated to 7.0',time:'4 hrs ago'},
+    {ico:'🚨',bg:'var(--red-lt)',text:'Lost dog alert for <strong>Bruno</strong> sent to community',time:'6 hrs ago'},
+    {ico:'🤝',bg:'var(--amber-lt)',text:'Brand enquiry from <strong>PetKraft</strong> received',time:'1 day ago'},
+    {ico:'✍️',bg:'var(--purple-lt)',text:'Blog post <strong>Dog-friendly cafes</strong> published',time:'2 days ago'},
+  ];
+  feed.innerHTML = activities.map(a=>`
+    <div class="act-item">
+      <div class="act-dot" style="background:${a.bg}">${a.ico}</div>
+      <div class="act-text">${a.text}</div>
+      <div class="act-time">${a.time}</div>
+    </div>`).join('');
+  // Lost table
+  const lt = document.getElementById('dashLostTable');
+  lt.innerHTML = db.lost.filter(d=>d.status==='missing').map(d=>`
+    <tr><td class="td-name">${d.name}</td><td>${d.location.split(',')[0]}</td><td style="color:var(--red);font-weight:700">${d.date}</td></tr>`).join('');
+}
+
+function renderTable(type){
+  const catBadge = {cafe:'badge-teal',restaurant:'badge-purple',vet:'badge-blue',park:'badge-green',hotel:'badge-amber',groomer:'badge-teal',boarding:'badge-teal',petstore:'badge-amber'};
+  if(type==='products'){
+    document.getElementById('productsTable').innerHTML = db.products.map(p=>`
+      <tr>
+        <td class="td-ico">${p.ico||'📦'}</td>
+        <td class="td-name">${p.name}</td>
+        <td>${p.brand}</td>
+        <td><span class="td-badge badge-teal">${p.category}</span></td>
+        <td>₹${p.price.toLocaleString('en-IN')}</td>
+        <td><span class="td-badge ${p.approved?'badge-green':'badge-gray'}">${p.approved?'✓ Approved':'Pending'}</span></td>
+        <td><div class="td-actions">
+          <button class="act-btn prim" onclick="editItem('product',${p.id})">Edit</button>
+          <button class="act-btn del" onclick="deleteItem('product',${p.id})">Delete</button>
+        </div></td>
+      </tr>`).join('');
+  }
+  if(type==='places'){
+    document.getElementById('placesTable').innerHTML = db.places.map(p=>`
+      <tr>
+        <td><span class="td-badge ${catBadge[p.type]||'badge-gray'}">${p.type}</span></td>
+        <td class="td-name">${p.name}</td>
+        <td>${p.address.split(',')[0]}</td>
+        <td class="td-score">${p.score}</td>
+        <td><span class="td-badge ${p.open?'badge-green':'badge-gray'}">${p.open?'Open':'Closed'}</span></td>
+        <td><div class="td-actions">
+          <button class="act-btn prim" onclick="editItem('place',${p.id})">Edit</button>
+          <button class="act-btn del" onclick="deleteItem('place',${p.id})">Delete</button>
+        </div></td>
+      </tr>`).join('');
+  }
+  if(type==='blog'){
+    document.getElementById('blogTable').innerHTML = db.blog.map(p=>`
+      <tr>
+        <td class="td-name" style="max-width:260px">${p.title}</td>
+        <td><span class="td-badge badge-teal">${p.category}</span></td>
+        <td><span class="td-badge ${p.status==='published'?'badge-green':'badge-gray'}">${p.status}</span></td>
+        <td>${p.date||''}</td>
+        <td><div class="td-actions">
+          <button class="act-btn prim" onclick="editItem('blog',${p.id})">Edit</button>
+          <button class="act-btn del" onclick="deleteItem('blog',${p.id})">Delete</button>
+        </div></td>
+      </tr>`).join('');
+  }
+  if(type==='food'){
+    document.getElementById('foodTable').innerHTML = db.food.map(p=>`
+      <tr>
+        <td class="td-ico">${p.ico||'🥗'}</td>
+        <td class="td-name">${p.name}</td>
+        <td>${p.category}</td>
+        <td><span class="td-badge ${p.safe==='yes'?'badge-green':p.safe==='moderate'?'badge-amber':'badge-red'}">${p.safe==='yes'?'✅ Safe':p.safe==='moderate'?'⚠️ Moderate':'⛔ Toxic'}</span></td>
+        <td style="font-size:12px;color:var(--ink-45)">${(p.tags||'').split(',').slice(0,2).join(', ')}</td>
+        <td><div class="td-actions">
+          <button class="act-btn prim" onclick="editItem('food',${p.id})">Edit</button>
+          <button class="act-btn del" onclick="deleteItem('food',${p.id})">Delete</button>
+        </div></td>
+      </tr>`).join('');
+  }
+  if(type==='lost'){
+    document.getElementById('lostTable').innerHTML = db.lost.map(p=>`
+      <tr>
+        <td class="td-name">${p.name}</td>
+        <td>${p.breed}</td>
+        <td>${p.location}</td>
+        <td>${p.owner||'—'}</td>
+        <td><span class="td-badge ${p.status==='missing'?'badge-red':'badge-green'}">${p.status==='missing'?'🔴 Missing':'✅ Reunited'}</span></td>
+        <td><div class="td-actions">
+          <button class="act-btn" onclick="markFound(${p.id})" style="${p.status==='missing'?'':'display:none'}">Mark found</button>
+          <button class="act-btn prim" onclick="editItem('lost',${p.id})">Edit</button>
+          <button class="act-btn del" onclick="deleteItem('lost',${p.id})">Delete</button>
+        </div></td>
+      </tr>`).join('');
+  }
+  if(type==='brands'){
+    document.getElementById('brandsTable').innerHTML = db.brands.map(p=>`
+      <tr>
+        <td class="td-name">${p.name}</td>
+        <td>${p.contact||'—'}<br><span style="font-size:11.5px;color:var(--ink-45)">${p.email||''}</span></td>
+        <td><span class="td-badge badge-teal">${p.tier.split(' —')[0]}</span></td>
+        <td>${p.category||'—'}</td>
+        <td><span class="td-badge ${p.status==='active'?'badge-green':p.status==='pending'?'badge-amber':'badge-gray'}">${p.status}</span></td>
+        <td><div class="td-actions">
+          <button class="act-btn prim" onclick="editItem('brand',${p.id})">Edit</button>
+          <button class="act-btn del" onclick="deleteItem('brand',${p.id})">Delete</button>
+        </div></td>
+      </tr>`).join('');
+  }
+}
+
+// ── TAG TOGGLES ──
+document.querySelectorAll('.form-tag').forEach(t=>{
+  t.addEventListener('click',()=>t.classList.toggle('on'));
+});
+
+// ── MODAL ──
+function openModal(type, clearForm=true){
+  editingType = type;
+  if(clearForm){ editingId = null; clearModalForm(type); }
+  document.getElementById('modal-'+type).classList.add('open');
+}
+function closeModal(type){
+  document.getElementById('modal-'+type).classList.remove('open');
+  editingId = null; editingType = null;
+}
+// Close on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{ if(e.target===o) closeModal(o.id.replace('modal-','')); });
+});
+
+function clearModalForm(type){
+  const ids = {
+    product:['pm-name','pm-brand','pm-cat','pm-ico','pm-price','pm-mrp','pm-desc','pm-perks','pm-link'],
+    place:['plm-name','plm-type','plm-address','plm-score','plm-open','plm-summary'],
+    blog:['bm-title','bm-cat','bm-status','bm-content','bm-readtime'],
+    food:['fm-name','fm-ico','fm-cat','fm-safe','fm-desc','fm-tags'],
+    lost:['lm-name','lm-breed','lm-location','lm-owner','lm-phone','lm-date','lm-status','lm-desc'],
+    brand:['brm-name','brm-contact','brm-email','brm-phone','brm-tier','brm-status'],
+  };
+  (ids[type]||[]).forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  if(type==='product'){ const cb=document.getElementById('pm-approved'); if(cb) cb.checked=true; }
+  if(type==='place'){ document.querySelectorAll('#plm-tags-row .form-tag').forEach(t=>{ t.classList.remove('on'); if(t.dataset.tag==='outdoor') t.classList.add('on'); }); }
+}
+
+function editItem(type, id){
+  const map = {product:'products',place:'places',blog:'blog',food:'food',lost:'lost',brand:'brands'};
+  const item = db[map[type]].find(x=>x.id===id);
+  if(!item) return;
+  editingId = id; editingType = type;
+  openModal(type, false);
+  // Fill form
+  if(type==='product'){
+    document.getElementById('pm-name').value=item.name||'';
+    document.getElementById('pm-brand').value=item.brand||'';
+    document.getElementById('pm-cat').value=item.category||'';
+    document.getElementById('pm-ico').value=item.ico||'';
+    document.getElementById('pm-price').value=item.price||'';
+    document.getElementById('pm-mrp').value=item.mrp||'';
+    document.getElementById('pm-desc').value=item.desc||'';
+    document.getElementById('pm-link').value=item.link||'';
+    document.getElementById('pm-approved').checked=item.approved!==false;
+  }
+  if(type==='place'){
+    document.getElementById('plm-name').value=item.name||'';
+    document.getElementById('plm-type').value=item.type||'';
+    document.getElementById('plm-address').value=item.address||'';
+    document.getElementById('plm-score').value=item.score||'';
+    document.getElementById('plm-open').value=item.open?'true':'false';
+    document.getElementById('plm-summary').value=item.summary||'';
+    document.querySelectorAll('#plm-tags-row .form-tag').forEach(t=>{
+      t.classList.toggle('on', (item.tags||[]).includes(t.dataset.tag));
+    });
+  }
+  if(type==='blog'){
+    document.getElementById('bm-title').value=item.title||'';
+    document.getElementById('bm-cat').value=item.category||'';
+    document.getElementById('bm-status').value=item.status||'draft';
+    document.getElementById('bm-content').value=item.content||'';
+    document.getElementById('bm-readtime').value=item.readtime||'';
+  }
+  if(type==='food'){
+    document.getElementById('fm-name').value=item.name||'';
+    document.getElementById('fm-ico').value=item.ico||'';
+    document.getElementById('fm-cat').value=item.category||'';
+    document.getElementById('fm-safe').value=item.safe||'yes';
+    document.getElementById('fm-desc').value=item.desc||'';
+    document.getElementById('fm-tags').value=item.tags||'';
+  }
+  if(type==='lost'){
+    document.getElementById('lm-name').value=item.name||'';
+    document.getElementById('lm-breed').value=item.breed||'';
+    document.getElementById('lm-location').value=item.location||'';
+    document.getElementById('lm-owner').value=item.owner||'';
+    document.getElementById('lm-phone').value=item.phone||'';
+    document.getElementById('lm-date').value=item.date||'';
+    document.getElementById('lm-status').value=item.status||'missing';
+    document.getElementById('lm-desc').value=item.desc||'';
+  }
+  if(type==='brand'){
+    document.getElementById('brm-name').value=item.name||'';
+    document.getElementById('brm-contact').value=item.contact||'';
+    document.getElementById('brm-email').value=item.email||'';
+    document.getElementById('brm-phone').value=item.phone||'';
+    document.getElementById('brm-tier').value=item.tier||'';
+    document.getElementById('brm-status').value=item.status||'active';
+  }
+}
+
+function saveItem(type){
+  const newId = editingId || Date.now();
+  let item = {};
+  if(type==='product'){
+    const name=document.getElementById('pm-name').value.trim();
+    if(!name){showToast('⚠️','Please enter a product name');return;}
+    item={id:newId,ico:document.getElementById('pm-ico').value||'📦',name,brand:document.getElementById('pm-brand').value,category:document.getElementById('pm-cat').value,price:parseInt(document.getElementById('pm-price').value)||0,mrp:parseInt(document.getElementById('pm-mrp').value)||0,desc:document.getElementById('pm-desc').value,link:document.getElementById('pm-link').value,approved:document.getElementById('pm-approved').checked};
+    upsert('products',item);
+  }
+  if(type==='place'){
+    const name=document.getElementById('plm-name').value.trim();
+    if(!name){showToast('⚠️','Please enter a place name');return;}
+    const tags=[...document.querySelectorAll('#plm-tags-row .form-tag.on')].map(t=>t.dataset.tag);
+    item={id:newId,name,type:document.getElementById('plm-type').value,address:document.getElementById('plm-address').value,score:parseFloat(document.getElementById('plm-score').value)||5.0,open:document.getElementById('plm-open').value==='true',summary:document.getElementById('plm-summary').value,tags};
+    upsert('places',item);
+  }
+  if(type==='blog'){
+    const title=document.getElementById('bm-title').value.trim();
+    if(!title){showToast('⚠️','Please enter a title');return;}
+    item={id:newId,title,category:document.getElementById('bm-cat').value,status:document.getElementById('bm-status').value,content:document.getElementById('bm-content').value,readtime:document.getElementById('bm-readtime').value,date:new Date().toISOString().split('T')[0]};
+    upsert('blog',item);
+  }
+  if(type==='food'){
+    const name=document.getElementById('fm-name').value.trim();
+    if(!name){showToast('⚠️','Please enter a food name');return;}
+    item={id:newId,name,ico:document.getElementById('fm-ico').value||'🥗',category:document.getElementById('fm-cat').value,safe:document.getElementById('fm-safe').value,desc:document.getElementById('fm-desc').value,tags:document.getElementById('fm-tags').value};
+    upsert('food',item);
+  }
+  if(type==='lost'){
+    const name=document.getElementById('lm-name').value.trim();
+    if(!name){showToast('⚠️','Please enter the dog name');return;}
+    item={id:newId,name,breed:document.getElementById('lm-breed').value,location:document.getElementById('lm-location').value,owner:document.getElementById('lm-owner').value,phone:document.getElementById('lm-phone').value,date:document.getElementById('lm-date').value||new Date().toISOString().split('T')[0],status:document.getElementById('lm-status').value,desc:document.getElementById('lm-desc').value};
+    upsert('lost',item);
+  }
+  if(type==='brand'){
+    const name=document.getElementById('brm-name').value.trim();
+    if(!name){showToast('⚠️','Please enter brand name');return;}
+    item={id:newId,name,contact:document.getElementById('brm-contact').value,email:document.getElementById('brm-email').value,phone:document.getElementById('brm-phone').value,tier:document.getElementById('brm-tier').value,status:document.getElementById('brm-status').value};
+    upsert('brands',item);
+  }
+  closeModal(type);
+  saveDB();
+  updateBadges();
+  const panelMap={product:'products',place:'places',blog:'blog',food:'food',lost:'lost',brand:'brands'};
+  renderTable(panelMap[type]);
+  showToast('✅', editingId ? 'Updated successfully!' : 'Added successfully!');
+  editingId = null;
+}
+
+function upsert(collection, item){
+  const idx = db[collection].findIndex(x=>x.id===item.id);
+  if(idx>=0) db[collection][idx]=item; else db[collection].push(item);
+}
+
+function deleteItem(type, id){
+  if(!confirm('Delete this item? This cannot be undone.')) return;
+  const map={product:'products',place:'places',blog:'blog',food:'food',lost:'lost',brand:'brands'};
+  db[map[type]] = db[map[type]].filter(x=>x.id!==id);
+  saveDB(); updateBadges();
+  renderTable(map[type]);
+  showToast('🗑','Deleted successfully');
+}
+
+function markFound(id){
+  const dog = db.lost.find(x=>x.id===id);
+  if(dog){ dog.status='found'; saveDB(); renderTable('lost'); updateBadges(); showToast('🎉','Marked as reunited!'); }
+}
+
+// ── SEARCH FILTER ──
+function filterTable(tableId, query){
+  const q = query.toLowerCase();
+  document.querySelectorAll('#'+tableId+' tr').forEach(tr=>{
+    tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+// ── TOAST ──
+let toastTimer;
+function showToast(ico, msg){
+  const el=document.getElementById('toastEl');
+  document.getElementById('toastIco').textContent=ico;
+  document.getElementById('toastMsg').textContent=msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 3000);
+}
+
+// ── INIT ──
+renderAll();
+</script>
+</body>
+</html>
